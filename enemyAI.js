@@ -9,56 +9,58 @@ function coordToMap(x, y) {
     return (y*mapW + x);
 };
 
+var moveUp = function () {
+    return {x:0, y:-1};
+};
+var moveDown =function() {
+    return {x:0, y:1};
+};
+var moveLeft = function() {
+    return {x:-1,y:0};
+};
+var moveRight = function() {
+    return {x:1,y:0};
+};
+
+
+var canMoveRight = function(char, pos) {
+    return (char.dirX != -1 || map[coordToMap(pos.x+1, pos.y)] != 1) ? true :  false;
+};
+var canMoveLeft = function (char, pos) {
+    return (char.dirX != 1 || map[coordToMap(pos.x-1, pos.y)] != 1) ? true :  false;
+};
+var canMoveUp = function(char, pos) {
+    return (char.dirY != 1 && map[coordToMap(pos.x, pos.y-1)] != 1) ? true : false;
+};
+var canMoveDown = function(char, pos) {
+    return (char.dirY != -1 && map[coordToMap(pos.x, pos.y+1)] != 1) ? true : false;
+};
+
 function strategy (enemy, character) {
     var cX = enemy.x, cY = enemy.y, tX = character.x, tY = character.y;
     var pos = pxToCoord(cX,cY);
 
-
-    var canMoveRight = function() {
-        return (enemy.dirX != -1 || map[coordToMap(pos.x+1, pos.y)] != 1) ? true :  false;
-    };
-    var canMoveLeft = function () {
-        return (enemy.dirX != 1 || map[coordToMap(pos.x-1, pos.y)] != 1) ? true :  false;
-    };
-    var canMoveUp = function() {
-        return (enemy.dirY != 1 && map[coordToMap(pos.x, pos.y-1)] != 1) ? true : false;
-    };
-    var canMoveDown = function() {
-        return (enemy.dirY != -1 && map[coordToMap(pos.x, pos.y+1)] != 1) ? true : false;
-    };
-    var moveUp = function () {
-        return {x:0, y:-1};
-    };
-    var moveDown =function() {
-        return {x:0, y:1};
-    };
-    var moveLeft = function() {
-        return {x:-1,y:0};
-    };
-    var moveRight = function() {
-        return {x:1,y:0};
-    };
     var moveSomeWhere = function() {
-        if (canMoveUp()) {
+        if (canMoveUp(enemy, pos)) {
             return moveUp();
-        } else if(canMoveDown()) {
+        } else if(canMoveDown(enemy, pos)) {
             return moveDown();
-        } else if(canMoveLeft()) {
+        } else if(canMoveLeft(enemy, pos)) {
             return moveLeft();
-        } else if(canMoveRight()) {
+        } else if(canMoveRight(enemy, pos)) {
             return moveRight();
         }
         debugger
     };
 
 
-    if (cX > tX && canMoveLeft()) {
+    if (cX > tX && canMoveLeft(enemy, pos)) {
         return moveLeft();
-    } else if (cX < tX && canMoveRight()) {
+    } else if (cX < tX && canMoveRight(enemy, pos)) {
         return moveRight();
-    } else if (cY > tY && canMoveUp()) {
+    } else if (cY > tY && canMoveUp(enemy, pos)) {
         return moveUp();
-    } else if (cY < tY && canMoveDown()) {
+    } else if (cY < tY && canMoveDown(enemy, pos)) {
         return moveDown();
     } else {
         return moveSomeWhere();
@@ -130,23 +132,23 @@ function whereToMove(enemy) {
 
     var nextMove;
 
-    if( canMoveUp() )   {
+    if( canMoveUp(enemy, curPos) )   {
         nextPos.x = curPos.x;
         nextPos.y = curPos.y - 1;
         nextMove.up = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.up = 99999;
+        nextMove.up = 99996;
     }
 
-    if( canMoveDown() )   {
+    if( canMoveDown(enemy, curPos) )   {
         nextPos.x = curPos.x;
         nextPos.y = curPos.y + 1;
         nextMove.down = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.down = 99997;
+        nextMove.down = 99998;
     }
 
-    if( canMoveRight() )   {
+    if( canMoveRight(enemy, curPos) )   {
         nextPos.x = curPos.x + 1;
         nextPos.y = curPos.y;
         nextMove.right = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
@@ -154,14 +156,42 @@ function whereToMove(enemy) {
         nextMove.right = 99999;
     }
 
-    if( canMoveLeft() )   {
+    if( canMoveLeft(enemy, curPos) )   {
         nextPos.x = curPos.x - 1;
         nextPos.y = curPos.y;
         nextMove.left = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.left = 99998;
+        nextMove.left = 99997;
     }
 
-    if( nextMove)
+    if( nextMove.up < nextMove.down )   {
+        if( nextMove.up < nextMove.left )   {
+            if( nextMove.up < nextMove.right )  {
+                moveUp();
+            } else  {
+                moveRight();
+            }
+        } else  {
+            if( nextMove.left < nextMove.right )    {
+                moveLeft();
+            } else  {
+                moveRight();
+            }
+        }
+    } else {
+        if( nextMove.down < nextMove.left )   {
+            if( nextMove.down < nextMove.right )  {
+                moveDown();
+            } else  {
+                moveRight();
+            }
+        } else  {
+            if( nextMove.left < nextMove.right )    {
+                moveLeft();
+            } else  {
+                moveRight();
+            }
+        }
+    }
 
 }

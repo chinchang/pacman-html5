@@ -1,3 +1,4 @@
+// https://github.com/chinchang/pacman-html5
 var c = world,
 	ctx = c.getContext('2d'),
 	mapW = 15,
