@@ -137,7 +137,7 @@ function whereToMove(enemy) {
         nextPos.y = curPos.y - 1;
         nextMove.up = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.up = 99996;
+        nextMove.up = 99999;
     }
 
     if( canMoveDown(enemy, curPos) )   {
@@ -145,7 +145,7 @@ function whereToMove(enemy) {
         nextPos.y = curPos.y + 1;
         nextMove.down = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.down = 99998;
+        nextMove.down = 99999;
     }
 
     if( canMoveRight(enemy, curPos) )   {
@@ -161,12 +161,12 @@ function whereToMove(enemy) {
         nextPos.y = curPos.y;
         nextMove.left = getStraightLineDistance(getTarget(allEnemies, pacman, enemy.color), nextPos);
     } else  {
-        nextMove.left = 99997;
+        nextMove.left = 99999;
     }
 
     if( nextMove.up < nextMove.down )   {
-        if( nextMove.up < nextMove.left )   {
-            if( nextMove.up < nextMove.right )  {
+        if( nextMove.up <= nextMove.left )   {
+            if( nextMove.up <= nextMove.right )  {
                 moveUp();
             } else  {
                 moveRight();
@@ -180,13 +180,13 @@ function whereToMove(enemy) {
         }
     } else {
         if( nextMove.down < nextMove.left )   {
-            if( nextMove.down < nextMove.right )  {
+            if( nextMove.down <= nextMove.right )  {
                 moveDown();
             } else  {
                 moveRight();
             }
         } else  {
-            if( nextMove.left < nextMove.right )    {
+            if( nextMove.left <= nextMove.right )    {
                 moveLeft();
             } else  {
                 moveRight();
