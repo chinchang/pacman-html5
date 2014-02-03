@@ -70,8 +70,8 @@ function strategy (enemy, character) {
 
 
 // Enemy personalities.
-//
-// Here be ghosts.
+// Created by Pragun.
+// Here be ghosts. You have been warned.
 
 function inFrontOfPacman(pacman, steps)    {
     var mapLoc;
@@ -115,6 +115,13 @@ function getTarget(allEnemies, pacman, color) {
             target.x = 2 * ( inFrontOfPacman(pacman, 2) - pxToCoord(allEnemies("red").x, allEnemies("red").y).x );
             target.y = 2 * ( inFrontOfPacman(pacman, 2) - pxToCoord(allEnemies("red").x, allEnemies("red").y).y );
             break;
+
+        case "orange"   :
+            if( getStraightLineDistance(enemy, pacman) >= 8 )   {
+                target = pxToCoord(pacman.x, pacman.y);
+            }   else    {
+                target = { x:1, y:1 };                      // replace (1,1) with fixed scatter target for orange
+            }
     }
 
     return target;
@@ -123,7 +130,7 @@ function getTarget(allEnemies, pacman, color) {
 
 function getStraightLineDistance(p1, p2)    {
     var dist = Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2);
-    return dist;
+    return ( Math.sqrt(dist) );
 }
 
 
